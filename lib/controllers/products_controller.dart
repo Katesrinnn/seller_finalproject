@@ -15,7 +15,9 @@ class ProductsController extends GetxController {
   //text field controllers
 
   var pnameController = TextEditingController();
+  var pabproductController = TextEditingController();
   var pdescController = TextEditingController();
+  var psizeController = TextEditingController();  
   var ppriceController = TextEditingController();
   var pquantityController = TextEditingController();
 
@@ -92,6 +94,8 @@ class ProductsController extends GetxController {
       'p_wishlist': FieldValue.arrayUnion([]),
       'p_desc': pdescController.text,
       'p_name': pnameController.text,
+      'p_aboutProduct': pabproductController.text,
+      'p_size': psizeController.text,
       'p_price': ppriceController.text,
       'p_quantity': pquantityController. text,
       'p_seller': Get.find<HomeController>().username,
