@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:seller_finalproject/controllers/orders_controller.dart';
 import 'package:seller_finalproject/controllers/profile_controller.dart';
 import 'package:seller_finalproject/views/orders_screen/components/order_place.dart';
@@ -42,7 +43,7 @@ class _OrderDetailsState extends State<OrderDetails> {
                   color: primaryApp, onPress: () {
                     controller.confirmed(true);
                     controller.changeStatus(title: "order_confirmed", status: true,docID: widget.data.id);
-                  }, title: "Confirm Order"),
+                  }, title: "Confirm Order", textColor: fontLightGrey, ),
             ),
           ),
           body: SingleChildScrollView(
