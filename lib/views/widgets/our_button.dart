@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:seller_finalproject/const/const.dart';
 import 'package:seller_finalproject/views/widgets/text_style.dart';
 
