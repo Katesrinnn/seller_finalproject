@@ -7,7 +7,7 @@ import 'package:seller_finalproject/views/products_screen/product_details.dart';
 import 'package:seller_finalproject/views/widgets/appbar_widget.dart';
 import 'package:seller_finalproject/views/widgets/dashboard_button.dart';
 import 'package:seller_finalproject/views/widgets/text_style.dart';
-// ignore: unused_import, depend_on_referenced_packages
+
 import 'package:intl/intl.dart' as intl;
 
 class HomeScreen extends StatelessWidget {
@@ -18,16 +18,17 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       appBar: appbarWidget(dashboard),
       body: StreamBuilder(
-          stream: StoreServices.getProducts(currentUser!.uid), 
-          builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            if (!snapshot.hasData) {
-              return loadingIndcator();
-            } 
-            else {
-              var data = snapshot.data!.docs;
-              data = data.sortedBy((a, b) => a['p_wishlist'].length.compareTo(b['p_wishlist'].length));
+        stream: StoreServices.getProducts(currentUser!.uid),
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (!snapshot.hasData) {
+            return loadingIndcator();
+          } else {
+            var data = snapshot.data!.docs;
+            data = data.sortedBy((a, b) => a['p_wishlist'].length.compareTo(b['p_wishlist'].length));
 
-              return Padding(
+            return SingleChildScrollView( 
+              physics: const BouncingScrollPhysics(),
+              child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -52,36 +53,38 @@ class HomeScreen extends StatelessWidget {
                       ],
                     ),
                     10.heightBox,
+
                     const Divider(),
-                    20.heightBox,
                     boldText(text: popular, color: fontGreyDark, size: 16.0),
                     10.heightBox,
-                    ListView(  
-                      physics: const BouncingScrollPhysics(),
-                      shrinkWrap: true,
-                      children: List.generate(
-                          data.length,
-                          (index) => data[index]['p_wishlist'].length == 0 ? const SizedBox() : ListTile(
-                                onTap: () {
-                                  Get.to(() =>  ProductDetails(data: data[index]));
-                                },
-                                leading: Image.network(
-                                  data[index]['p_imgs'][0],
-                                  width: 100,
-                                  height: 100,
-                                  fit: BoxFit.cover,
-                                ),
-                                title: boldText(
-                                    text: "${data[index]['p_name']}", color: fontGreyDark),
-                                subtitle:
-                                    normalText(text: "${data[index]['p_price']} Bath", color: fontGrey),
-                              )),
+                    ListView.builder( 
+                      physics: const NeverScrollableScrollPhysics(), 
+                      shrinkWrap: true, 
+                      itemCount: data.length,
+                      itemBuilder: (context, index) {
+                        if (data[index]['p_wishlist'].length == 0) return const SizedBox(); 
+                        return ListTile(
+                          onTap: () {
+                            Get.to(() => ProductDetails(data: data[index]));
+                          },
+                          leading: Image.network(
+                            data[index]['p_imgs'][0],
+                            width: 100,
+                            height: 100,
+                            fit: BoxFit.cover,
+                          ),
+                          title: boldText(text: "${data[index]['p_name']}", color: fontGreyDark),
+                          subtitle: normalText(text: "${data[index]['p_price']} Bath", color: fontGrey),
+                        );
+                      },
                     ),
                   ],
                 ),
-              );
-            }
-          }),
+              ),
+            );
+          }
+        },
+      ),
     );
   }
 }
